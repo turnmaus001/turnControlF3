@@ -78,6 +78,8 @@ public class MyResource {
 	}
 
 	private int checkLogin(String token) {
+		if(token == null || token.isEmpty())
+			return 3;
 		final String encodedUserPassword = token.replaceFirst(AUTHENTICATION_SCHEME + " ", "");
 		// Decode username and password
 		String usernameAndPassword = new String(Base64.decode(encodedUserPassword.getBytes()));
