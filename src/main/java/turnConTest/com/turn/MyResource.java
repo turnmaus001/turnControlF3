@@ -72,14 +72,13 @@ public class MyResource {
 		String token = httpheaders.getHeaderString("Authorization");
 		int checkL = checkLogin(token);
 		if (checkL != 3) {
-			return "[]";
+			employee = EmployeeDAO.getEmployee();
+			return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), checkL);
 		}
 		return "{\"error\": \"loginFailed\"}";
 	}
 
 	private int checkLogin(String token) {
-		if(token == null || token.isEmpty())
-			return 3;
 		final String encodedUserPassword = token.replaceFirst(AUTHENTICATION_SCHEME + " ", "");
 		// Decode username and password
 		String usernameAndPassword = new String(Base64.decode(encodedUserPassword.getBytes()));
@@ -297,6 +296,22 @@ public class MyResource {
 		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1);
 	}
 
+	@GET
+	@Path("/delete/{id}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public String deleteUser(@Context HttpHeaders httpheaders, @PathParam("id") String id) {
+		String token = httpheaders.getHeaderString("Authorization");
+		int checkL = checkLogin(token);
+		if (checkL == 2) {
+			return "{\"error\": \"notAllow\"}";
+		} else if (checkL == 3) {
+			return "{\"error\": \"notLogin\"}";
+		}
+		EmployeeDAO.removeEmployee(id);
+		employee = EmployeeDAO.getEmployee();
+		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1);
+	}
+	
 	public static ArrayList<ArrayList<Employee>> updatePosition(ArrayList<Employee> employee) {
 // total 10, active 6 , inactive 4
 // Get active, inactive number

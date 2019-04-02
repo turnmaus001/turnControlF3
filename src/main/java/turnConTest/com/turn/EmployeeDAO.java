@@ -11,7 +11,12 @@ public class EmployeeDAO {
 	public static  HashMap<String, Employee> addEmployee( String userName) {
         String employeeName =userName;
         int size = employee.size();
-        String employeeID = Integer.toString(size + 1);
+        int maxId = 0;
+        for (String emp : employee.keySet()) {
+			if(Integer.parseInt(emp) > maxId)
+				maxId = Integer.parseInt(emp);
+		}
+        String employeeID = Integer.toString(maxId + 1);
         //LocalDateTime checkIn = LocalDateTime.now();
         LocalDateTime checkIn = Instant.now().atZone(ZoneId.of("America/Chicago")).toLocalDateTime();
         employee.put(employeeID, new Employee(employeeID, employeeName, checkIn));
@@ -24,13 +29,16 @@ public class EmployeeDAO {
 	public static  Employee getEmployee( String id) {
         return employee.get(id);
    }
+	public static void removeEmployee( String id) {
+        employee.remove(id);
+   }
 	public static  boolean isSameName( String name) {
 		for (Employee employee1 : employee.values()) {
 			if(employee1.getEmpName().toLowerCase().equals(name.trim().toLowerCase())) {
-				return false;
+				return true;
 			}
 		}
-        return true;
+        return false;
    }
 	public static  HashMap<String, Employee> getEmployee( ) {
         return employee;
