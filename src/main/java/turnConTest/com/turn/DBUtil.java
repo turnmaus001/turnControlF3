@@ -9,11 +9,11 @@ import java.sql.SQLException;
 public class DBUtil {
 
 	
-	/*public static Connection getConnection() throws URISyntaxException, SQLException {
+	public static Connection getConnection() throws URISyntaxException, SQLException {
 		String dbUrl = System.getenv("JDBC_DATABASE_URL");
 		return DriverManager.getConnection(dbUrl);
-	}*/
-
+	}
+/*
 public static Connection getConnection1() throws URISyntaxException, SQLException {
 	    URI dbUri = new URI(System.getenv("DATABASE_URL"));
 
@@ -22,5 +22,5 @@ public static Connection getConnection1() throws URISyntaxException, SQLExceptio
 	    String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath() + "?sslmode=require";
 
 	    return DriverManager.getConnection(dbUrl, username, password);
-	}
+	}*/
 }

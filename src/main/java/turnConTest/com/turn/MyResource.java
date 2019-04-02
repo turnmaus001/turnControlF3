@@ -1,13 +1,18 @@
 package turnConTest.com.turn;
 
 import java.net.URISyntaxException;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -40,11 +45,11 @@ public class MyResource {
 	public static String username;
 	public static String password;
 
-	/*
-	 * { Date date = new Date(); String strDateFormat = "yyyy:MM:dd"; DateFormat
-	 * dateFormat = new SimpleDateFormat(strDateFormat); String formattedDate=
-	 * dateFormat.format(date); TurnUtil.setData(formattedDate); }
-	 */
+	
+	String strDateFormat = "yy:MM:dd";
+	DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+	
+
 	/**
 	 * Method handling HTTP GET requests. The returned object will be sent to the
 	 * client as "text/plain" media type.
@@ -124,7 +129,9 @@ public class MyResource {
 		 * " user_id serial PRIMARY KEY," + " username VARCHAR(50) UNIQUE NOT NULL," +
 		 * " password VARCHAR(50) NOT NULL," + " email VARCHAR(355) UNIQUE NOT NULL," +
 		 * " created_on TIMESTAMP NOT NULL," + " last_login TIMESTAMP" + ");");
-		 * con.close();
+		 * con.close(); CREATE TABLE dataturn(datet VARCHAR (50) UNIQUE NOT NULL,vl json
+		 * NOT NULL); insert into dataturn(datet,vl) values ('19:04:04','{}'); update
+		 * dataturn set vl = '[]' where datet = '19:04:03';
 		 */
 
 		String token = httpheaders.getHeaderString("Authorization");
@@ -311,7 +318,7 @@ public class MyResource {
 		employee = EmployeeDAO.getEmployee();
 		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1);
 	}
-	
+
 	public static ArrayList<ArrayList<Employee>> updatePosition(ArrayList<Employee> employee) {
 // total 10, active 6 , inactive 4
 // Get active, inactive number
@@ -546,16 +553,25 @@ public class MyResource {
 		}
 		s += "]";
 		s += "}";
-		/*
-		 * Connection con = null; try { con = DBUtil.getConnection(); Statement stmt =
-		 * null; stmt = con.createStatement(); stmt.executeUpdate(
-		 * "update employe set vl = \'" + s + "\' where id = \'" + TurnUtil.getData()
-		 * +"\'"); } catch (URISyntaxException e) { // TODO Auto-generated catch block
-		 * e.printStackTrace(); } catch (SQLException e) { // TODO Auto-generated catch
-		 * block e.printStackTrace(); } finally { try { con.close(); } catch
-		 * (SQLException e) { // TODO Auto-generated catch block e.printStackTrace(); }
-		 * }
-		 */
+
+		Connection con = null;
+		try {
+			Date date = new Date();
+			String formattedDate = dateFormat.format(date);
+			con = DBUtil.getConnection();
+			Statement stmt = null;
+			stmt = con.createStatement();
+			stmt.executeUpdate("update dataturn set vl = \'" + s + "\' where datet = \'" + formattedDate + "\'");
+		} catch (URISyntaxException e) { // TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) { // TODO Auto-generated catch
+			e.printStackTrace();
+		} finally {
+			try {
+				con.close();
+			} catch (SQLException e) {
+			}
+		}
 
 		return s;
 	}
