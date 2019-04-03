@@ -391,6 +391,8 @@ public class MyResource {
 				Object obj = new JSONParser().parse(rs.getString(1));
 				JSONObject jo = (JSONObject) obj;
 				JSONArray ja = (JSONArray) jo.get("detail");
+				if(ja == null)
+					return "{}";
 				for(Object o: ja){
 				    if ( o instanceof JSONObject ) {
 				    	parseEmployeeObject((JSONObject)o,id);
