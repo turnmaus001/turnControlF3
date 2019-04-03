@@ -10,6 +10,9 @@ public class WorkHis {
 		return name;
 	}
 
+	public WorkHis() {
+		
+	}
 	public WorkHis(String name, double money, boolean turn, String id) {
 		super();
 		this.name = name;
