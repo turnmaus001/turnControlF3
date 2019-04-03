@@ -2,22 +2,23 @@ package turnConTest.com.turn;
 
 import java.net.URISyntaxException;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.TimeZone;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -27,6 +28,11 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.internal.util.Base64;
+import org.glassfish.jersey.server.internal.JsonWithPaddingInterceptor;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -35,7 +41,6 @@ import org.glassfish.jersey.internal.util.Base64;
 @Path("/")
 public class MyResource {
 	LocalDateTime aDateTime = LocalDateTime.of(2018, Month.OCTOBER, 31, 19, 30, 40);
-	private static final String AUTHORIZATION_PROPERTY = "Authorization";
 	private static final String AUTHENTICATION_SCHEME = "Basic";
 
 	LocalDateTime now = LocalDateTime.now();
@@ -45,10 +50,8 @@ public class MyResource {
 	public static String username;
 	public static String password;
 
-	
 	String strDateFormat = "yy:MM:dd";
 	DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
-	
 
 	/**
 	 * Method handling HTTP GET requests. The returned object will be sent to the
@@ -319,6 +322,55 @@ public class MyResource {
 		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1);
 	}
 
+	@GET
+	@Path("/dummy/{data}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public String getData(@Context HttpHeaders httpheaders, @PathParam("data") String id) {
+		String token = httpheaders.getHeaderString("Authorization");
+		String tmp = "";
+		int checkL = checkLogin(token);
+		if (checkL == 3) {
+			return "{\"error\": \"notLogin\"}";
+		}
+		Connection con = null;
+		Statement stmt = null;
+		try {
+			con = DBUtil.getConnection();
+
+			stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT vl from dataturn where datet=\'" + id + "\'");
+			if (rs.next()) {
+				Object obj = new JSONParser().parse(rs.getString(1));
+				JSONObject jo = (JSONObject) obj;
+				JSONArray ja = (JSONArray) jo.get("detail");
+				Iterator itr2 = ja.iterator();
+				while (itr2.hasNext()) {
+					Iterator<Map.Entry> itr1 = ((Map) itr2.next()).entrySet().iterator();
+					while (itr1.hasNext()) {
+						Map.Entry pair = itr1.next();
+						tmp += pair.getKey() + " : " + pair.getValue() + "--";
+					}
+				}
+			}
+			// stmt.executeUpdate("update dataturn set vl = \'" + s + "\' where datet = \'"
+			// + formattedDate + "\'");
+		} catch (URISyntaxException e) { // TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) { // TODO Auto-generated catch
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			try {
+				con.close();
+				stmt.close();
+			} catch (SQLException e) {
+			}
+		}
+		return tmp;// buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1);
+	}
+
 	public static ArrayList<ArrayList<Employee>> updatePosition(ArrayList<Employee> employee) {
 // total 10, active 6 , inactive 4
 // Get active, inactive number
@@ -353,7 +405,6 @@ public class MyResource {
 			Collections.sort(tmpFreeWorker, new Comparator<Employee>() {
 
 				public int compare(Employee arg0, Employee arg1) {
-					// TODO Auto-generated method stub
 					if (arg0.getTotalTurn() > arg1.getTotalTurn())
 						return 1;
 					else if (arg0.getTotalTurn() == arg1.getTotalTurn())
@@ -406,7 +457,6 @@ public class MyResource {
 			 * (breakF) { break; } } arrOfArrEmployee.add(tmpFreeWorker);
 			 */
 
-			int countLoop = 1;
 			int j = 1;
 			boolean breakF = true;
 			while (j <= (tmpFreeWorker.size() - 1)) {
@@ -553,13 +603,13 @@ public class MyResource {
 		}
 		s += "]";
 		s += "}";
-
 		Connection con = null;
+		Statement stmt = null;
 		try {
-			Date date = new Date();
-			String formattedDate = dateFormat.format(date);
+			LocalDateTime checkIn = Instant.now().atZone(ZoneId.of("America/Chicago")).toLocalDateTime();
+			String formattedDate = dateFormat.format(checkIn);
 			con = DBUtil.getConnection();
-			Statement stmt = null;
+
 			stmt = con.createStatement();
 			stmt.executeUpdate("update dataturn set vl = \'" + s + "\' where datet = \'" + formattedDate + "\'");
 		} catch (URISyntaxException e) { // TODO Auto-generated catch block
@@ -569,6 +619,7 @@ public class MyResource {
 		} finally {
 			try {
 				con.close();
+				stmt.close();
 			} catch (SQLException e) {
 			}
 		}

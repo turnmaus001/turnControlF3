@@ -78,7 +78,11 @@
 			<artifactId>postgresql</artifactId>
 			<version>42.2.1</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>1.1.1</version>
+		</dependency>
 		<!-- uncomment this to get JSON support <dependency> <groupId>org.glassfish.jersey.media</groupId> 
 			<artifactId>jersey-media-json-binding</artifactId> </dependency> -->
 	</dependencies>
