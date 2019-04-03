@@ -50,8 +50,8 @@ public class MyResource {
 	public static String username;
 	public static String password;
 
-	String strDateFormat = "yy:MM:dd";
-	DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+	//String strDateFormat = "yy:MM:dd";
+	DateTimeFormatter dtfL = DateTimeFormatter.ofPattern("yy:MM:dd");
 
 	/**
 	 * Method handling HTTP GET requests. The returned object will be sent to the
@@ -603,11 +603,12 @@ public class MyResource {
 		}
 		s += "]";
 		s += "}";
+		
 		Connection con = null;
 		Statement stmt = null;
 		try {
 			LocalDateTime checkIn = Instant.now().atZone(ZoneId.of("America/Chicago")).toLocalDateTime();
-			String formattedDate = dateFormat.format(checkIn);
+			String formattedDate = dtfL.format(checkIn);
 			con = DBUtil.getConnection();
 			stmt = con.createStatement();
 			stmt.executeUpdate("update dataturn set vl = \'" + s + "\' where datet = \'" + formattedDate + "\'");
