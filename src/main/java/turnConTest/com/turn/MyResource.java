@@ -364,7 +364,7 @@ public class MyResource {
 		} finally {
 			try {
 				con.close();
-				stmt.close();
+			//	stmt.close();
 			} catch (SQLException e) {
 			}
 		}
@@ -609,7 +609,6 @@ public class MyResource {
 			LocalDateTime checkIn = Instant.now().atZone(ZoneId.of("America/Chicago")).toLocalDateTime();
 			String formattedDate = dateFormat.format(checkIn);
 			con = DBUtil.getConnection();
-
 			stmt = con.createStatement();
 			stmt.executeUpdate("update dataturn set vl = \'" + s + "\' where datet = \'" + formattedDate + "\'");
 		} catch (URISyntaxException e) { // TODO Auto-generated catch block
@@ -619,7 +618,7 @@ public class MyResource {
 		} finally {
 			try {
 				con.close();
-				stmt.close();
+			//	stmt.close();
 			} catch (SQLException e) {
 			}
 		}
