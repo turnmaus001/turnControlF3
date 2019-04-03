@@ -617,7 +617,8 @@ public class MyResource {
 			e.printStackTrace();
 		} finally {
 			try {
-				con.close();
+				if(con != null)
+					con.close();
 			//	stmt.close();
 			} catch (SQLException e) {
 			}
