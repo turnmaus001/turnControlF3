@@ -431,7 +431,7 @@ public class MyResource {
 		tmpe.setEmployeeID(id2);
 		JSONArray ja1 = (JSONArray) employee1.get("workHis");
 		Iterator itr2 = ja1.iterator();
-		ArrayList<WorkHis> lstWh = new ArrayList<>();
+		ArrayList<WorkHis> lstWh = new ArrayList<WorkHis>();
 		while (itr2.hasNext()) {
 			Iterator<Map.Entry> itr1 = ((Map) itr2.next()).entrySet().iterator();
 			WorkHis tn = new WorkHis();
