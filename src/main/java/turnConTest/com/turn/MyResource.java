@@ -61,7 +61,6 @@ public class MyResource {
 	 * @return String that will be returned as a text/plain response.
 	 */
 
-	@SuppressWarnings("unchecked")
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
 	public String getEmployee(@Context HttpHeaders httpheaders) {
@@ -84,7 +83,11 @@ public class MyResource {
 						Object obj = new JSONParser().parse(rs.getString(1));
 						JSONObject jo = (JSONObject) obj;
 						JSONArray ja = (JSONArray) jo.get("detail");
-						ja.forEach(emp -> parseEmployeeObject((JSONObject) emp, formattedDate));
+						for(Object o: ja){
+						    if ( o instanceof JSONObject ) {
+						    	parseEmployeeObject((JSONObject)o,formattedDate);
+						    }
+						}
 					}
 				} catch (URISyntaxException e) { // TODO Auto-generated catch block
 					e.printStackTrace();
@@ -366,7 +369,6 @@ public class MyResource {
 	 * }
 	 */
 
-	@SuppressWarnings("unchecked")
 	@GET
 	@Path("/dummy/{data}")
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -389,7 +391,12 @@ public class MyResource {
 				Object obj = new JSONParser().parse(rs.getString(1));
 				JSONObject jo = (JSONObject) obj;
 				JSONArray ja = (JSONArray) jo.get("detail");
-				ja.forEach(emp -> parseEmployeeObject((JSONObject) emp, id));
+				for(Object o: ja){
+				    if ( o instanceof JSONObject ) {
+				    	parseEmployeeObject((JSONObject)o,id);
+				    }
+				}
+				//ja.forEach(emp -> parseEmployeeObject((JSONObject) emp, id));
 			}
 		} catch (URISyntaxException e) { // TODO Auto-generated catch block
 			e.printStackTrace();
