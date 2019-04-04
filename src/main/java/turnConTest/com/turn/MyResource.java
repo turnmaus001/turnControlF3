@@ -342,7 +342,7 @@ public class MyResource {
 		wk.setMoney(money);
 		wk.setName(name);
 		wk.setMoney(money);
-		wk.setTurn(free == "1" ? true : false);
+		wk.setTurn(free.equals("1") ? true : false);
 		employee1.getTurnListD().remove(index);
 		employee1.getTurnListD().add(wk);
 		employee1.setIsWorking(false);
