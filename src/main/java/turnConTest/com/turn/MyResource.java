@@ -46,6 +46,7 @@ public class MyResource {
 
 	LocalDateTime now = LocalDateTime.now();
 	HashMap<String, Employee> employee = new HashMap<String, Employee>();
+	HashMap<String, Employee> employeeT = new HashMap<String, Employee>();
 	ArrayList<ArrayList<Employee>> arrOfArrEmployee = new ArrayList<ArrayList<Employee>>();
 	public static final int STEP_TURN = 15;
 	public static String username;
@@ -85,7 +86,7 @@ public class MyResource {
 						JSONArray ja = (JSONArray) jo.get("detail");
 						for (Object o : ja) {
 							if (o instanceof JSONObject) {
-								parseEmployeeObject((JSONObject) o, formattedDate);
+								parseEmployeeObject((JSONObject) o, formattedDate, true);
 							}
 						}
 					}
@@ -134,7 +135,7 @@ public class MyResource {
 						JSONArray ja = (JSONArray) jo.get("detail");
 						for (Object o : ja) {
 							if (o instanceof JSONObject) {
-								parseEmployeeObject((JSONObject) o, formattedDate);
+								parseEmployeeObject((JSONObject) o, formattedDate, true);
 							}
 						}
 					}
@@ -204,7 +205,7 @@ public class MyResource {
 						JSONArray ja = (JSONArray) jo.get("detail");
 						for (Object o : ja) {
 							if (o instanceof JSONObject) {
-								parseEmployeeObject((JSONObject) o, formattedDate);
+								parseEmployeeObject((JSONObject) o, formattedDate, true);
 							}
 						}
 					}
@@ -231,31 +232,31 @@ public class MyResource {
 		return "{\"error\": \"notLogin\"}";
 	}
 
-	/*@GET
-	@Path("/clearUser")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public String clearEmployee(@Context HttpHeaders httpheaders) throws URISyntaxException, SQLException {
-		
-		 * Connection con = DBUtil.getConnection(); Statement stmt = null; stmt =
-		 * con.createStatement(); stmt.executeQuery( "CREATE TABLE account(" +
-		 * " user_id serial PRIMARY KEY," + " username VARCHAR(50) UNIQUE NOT NULL," +
-		 * " password VARCHAR(50) NOT NULL," + " email VARCHAR(355) UNIQUE NOT NULL," +
-		 * " created_on TIMESTAMP NOT NULL," + " last_login TIMESTAMP" + ");");
-		 * con.close(); CREATE TABLE dataturn(datet VARCHAR (50) UNIQUE NOT NULL,vl json
-		 * NOT NULL); insert into dataturn(datet,vl) values ('19:04:04','{}'); update
-		 * dataturn set vl = '[]' where datet = '19:04:03';
-		 
-
-		String token = httpheaders.getHeaderString("Authorization");
-		int checkL = checkLogin(token);
-		if (checkL == 1) {
-			employee = EmployeeDAO.clearEmployee();
-			return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1);
-		} else if (checkL == 2) {
-			return "{\"error\": \"notAllow\"}";
-		}
-		return "{\"error\": \"notLogin\"}";
-	}*/
+	/*
+	 * @GET
+	 * 
+	 * @Path("/clearUser")
+	 * 
+	 * @Produces({ MediaType.APPLICATION_JSON }) public String
+	 * clearEmployee(@Context HttpHeaders httpheaders) throws URISyntaxException,
+	 * SQLException {
+	 * 
+	 * Connection con = DBUtil.getConnection(); Statement stmt = null; stmt =
+	 * con.createStatement(); stmt.executeQuery( "CREATE TABLE account(" +
+	 * " user_id serial PRIMARY KEY," + " username VARCHAR(50) UNIQUE NOT NULL," +
+	 * " password VARCHAR(50) NOT NULL," + " email VARCHAR(355) UNIQUE NOT NULL," +
+	 * " created_on TIMESTAMP NOT NULL," + " last_login TIMESTAMP" + ");");
+	 * con.close(); CREATE TABLE dataturn(datet VARCHAR (50) UNIQUE NOT NULL,vl json
+	 * NOT NULL); insert into dataturn(datet,vl) values ('19:04:04','{}'); update
+	 * dataturn set vl = '[]' where datet = '19:04:03';
+	 * 
+	 * 
+	 * String token = httpheaders.getHeaderString("Authorization"); int checkL =
+	 * checkLogin(token); if (checkL == 1) { employee = EmployeeDAO.clearEmployee();
+	 * return buildJson(updatePosition(new ArrayList<Employee>(employee.values())),
+	 * 1); } else if (checkL == 2) { return "{\"error\": \"notAllow\"}"; } return
+	 * "{\"error\": \"notLogin\"}"; }
+	 */
 
 	/*
 	 * @GET
@@ -304,7 +305,7 @@ public class MyResource {
 		employee1.setTotal(employee1.getTotal() + money);
 		employee1.setIsWorking(false);
 		employee = EmployeeDAO.addEmployee(id, employee1);
-		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1,false);
+		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1, false);
 	}
 
 	@GET
@@ -347,7 +348,7 @@ public class MyResource {
 		employee1.getTurnListD().add(wk);
 		employee1.setIsWorking(false);
 		employee = EmployeeDAO.addEmployee(id, employee1);
-		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1,false);
+		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1, false);
 	}
 
 	@GET
@@ -378,7 +379,7 @@ public class MyResource {
 		employee1.setTotal(employee1.getTotal() - wk.getMoney());
 		employee1.getTurnListD().remove(index);
 		employee = EmployeeDAO.addEmployee(id, employee1);
-		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1,false);
+		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1, false);
 	}
 
 	@GET
@@ -395,7 +396,7 @@ public class MyResource {
 		Employee employee1 = EmployeeDAO.getEmployee(id);
 		employee1.setActive(!employee1.isActive());
 		employee = EmployeeDAO.addEmployee(id, employee1);
-		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1,false);
+		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1, false);
 	}
 
 	@GET
@@ -412,7 +413,7 @@ public class MyResource {
 		Employee employee1 = EmployeeDAO.getEmployee(id);
 		employee1.setIsWorking(!employee1.isIsWorking());
 		employee = EmployeeDAO.addEmployee(id, employee1);
-		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1,false);
+		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1, false);
 	}
 
 	@GET
@@ -428,7 +429,7 @@ public class MyResource {
 		}
 		EmployeeDAO.removeEmployee(id);
 		employee = EmployeeDAO.getEmployee();
-		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1,false);
+		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 1, false);
 	}
 
 	/*
@@ -452,6 +453,8 @@ public class MyResource {
 		if (checkL == 3) {
 			return "{\"error\": \"notLogin\"}";
 		}
+		LocalDateTime checkIn = Instant.now().atZone(ZoneId.of("America/Chicago")).toLocalDateTime();
+		String formattedDate = dtfL.format(checkIn);
 		Connection con = null;
 		Statement stmt = null;
 		try {
@@ -459,7 +462,9 @@ public class MyResource {
 
 			stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT vl from dataturn where datet=\'" + id + "\'");
-			employee = EmployeeDAO.clearEmployee();
+			employeeT.clear();
+			if (formattedDate.equals(id) && checkL == 1)
+				employee = EmployeeDAO.clearEmployee();
 			if (rs.next()) {
 				Object obj = new JSONParser().parse(rs.getString(1));
 				JSONObject jo = (JSONObject) obj;
@@ -468,7 +473,10 @@ public class MyResource {
 					return "{}";
 				for (Object o : ja) {
 					if (o instanceof JSONObject) {
-						parseEmployeeObject((JSONObject) o, id);
+						if (formattedDate.equals(id) && checkL == 1)
+							parseEmployeeObject((JSONObject) o, id, true);
+						else
+							parseEmployeeObject((JSONObject) o, id, false);
 					}
 				}
 				// ja.forEach(emp -> parseEmployeeObject((JSONObject) emp, id));
@@ -487,16 +495,14 @@ public class MyResource {
 			} catch (SQLException e) {
 			}
 		}
-		LocalDateTime checkIn = Instant.now().atZone(ZoneId.of("America/Chicago")).toLocalDateTime();
-		String formattedDate = dtfL.format(checkIn);
-		if(formattedDate.equals(id))
-			return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), checkL,true);// buildJson(updatePosition(new
-																								// ArrayList<Employee>(employee.values())),
-		return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), 2,true);																						// 1);
-		
+		if (formattedDate.equals(id) && checkL == 1)
+			return buildJson(updatePosition(new ArrayList<Employee>(employee.values())), checkL, true);// buildJson(updatePosition(new
+		// ArrayList<Employee>(employee.values())),
+		return buildJson(updatePosition(new ArrayList<Employee>(employeeT.values())), 2, true); // 1);
+
 	}
 
-	private void parseEmployeeObject(JSONObject employee1, String id) {
+	private void parseEmployeeObject(JSONObject employee1, String id, boolean load) {
 		Employee tmpe = new Employee();
 		String id2 = employee1.get("id").toString();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy:MM:dd HH:mm:ss");
@@ -529,8 +535,10 @@ public class MyResource {
 			lstWh.add(tn);
 		}
 		tmpe.setTurnListD(lstWh);
-		System.out.println(tmpe);
-		employee = EmployeeDAO.addEmployee(id2, tmpe);
+		if (!load)
+			employeeT.put(id2, tmpe);
+		else
+			employee.put(id2, tmpe);
 	}
 
 	public static ArrayList<ArrayList<Employee>> updatePosition(ArrayList<Employee> employee) {
