@@ -84,6 +84,8 @@ public class MyResource {
 						Object obj = new JSONParser().parse(rs.getString(1));
 						JSONObject jo = (JSONObject) obj;
 						JSONArray ja = (JSONArray) jo.get("detail");
+						if (ja == null)
+							return "{}";
 						for (Object o : ja) {
 							if (o instanceof JSONObject) {
 								parseEmployeeObject((JSONObject) o, formattedDate, true);
@@ -133,6 +135,8 @@ public class MyResource {
 						Object obj = new JSONParser().parse(rs.getString(1));
 						JSONObject jo = (JSONObject) obj;
 						JSONArray ja = (JSONArray) jo.get("detail");
+						if (ja == null)
+							return "{}";
 						for (Object o : ja) {
 							if (o instanceof JSONObject) {
 								parseEmployeeObject((JSONObject) o, formattedDate, true);
@@ -169,9 +173,9 @@ public class MyResource {
 		final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
 		final String username = tokenizer.nextToken();
 		final String password = tokenizer.nextToken();
-		if ("admin".equals(username) && "abc456-".equals(password)) {
+		if ("admin".equals(username) && "207".equals(password)) {
 			return 1;
-		} else if ("viewer".equals(username) && "viewr123".equals(password)) {
+		} else if ("viewer".equals(username) && "123".equals(password)) {
 			return 2;
 		}
 		return 3;
@@ -203,6 +207,8 @@ public class MyResource {
 						Object obj = new JSONParser().parse(rs.getString(1));
 						JSONObject jo = (JSONObject) obj;
 						JSONArray ja = (JSONArray) jo.get("detail");
+						if (ja == null)
+							return "{}";
 						for (Object o : ja) {
 							if (o instanceof JSONObject) {
 								parseEmployeeObject((JSONObject) o, formattedDate, true);
