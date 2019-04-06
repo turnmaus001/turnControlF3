@@ -84,8 +84,14 @@ public class MyResource {
 						Object obj = new JSONParser().parse(rs.getString(1));
 						JSONObject jo = (JSONObject) obj;
 						JSONArray ja = (JSONArray) jo.get("detail");
-						if (ja == null)
-							return "{}";
+						if (ja == null) {
+							String s ="{\"status\":";
+							if (checkL == 1)
+								s += true;
+							else
+								s += false;
+							return s + "}";
+						}
 						for (Object o : ja) {
 							if (o instanceof JSONObject) {
 								parseEmployeeObject((JSONObject) o, formattedDate, true);
@@ -135,8 +141,14 @@ public class MyResource {
 						Object obj = new JSONParser().parse(rs.getString(1));
 						JSONObject jo = (JSONObject) obj;
 						JSONArray ja = (JSONArray) jo.get("detail");
-						if (ja == null)
-							return "{}";
+						if (ja == null) {
+							String s ="{\"status\":";
+							if (checkL == 1)
+								s += true;
+							else
+								s += false;
+							return s + "}";
+						}
 						for (Object o : ja) {
 							if (o instanceof JSONObject) {
 								parseEmployeeObject((JSONObject) o, formattedDate, true);
@@ -207,8 +219,14 @@ public class MyResource {
 						Object obj = new JSONParser().parse(rs.getString(1));
 						JSONObject jo = (JSONObject) obj;
 						JSONArray ja = (JSONArray) jo.get("detail");
-						if (ja == null)
-							return "{}";
+						if (ja == null) {
+							String s ="{\"status\":";
+							if (checkL == 1)
+								s += true;
+							else
+								s += false;
+							return s + "}";
+						}
 						for (Object o : ja) {
 							if (o instanceof JSONObject) {
 								parseEmployeeObject((JSONObject) o, formattedDate, true);
@@ -475,8 +493,14 @@ public class MyResource {
 				Object obj = new JSONParser().parse(rs.getString(1));
 				JSONObject jo = (JSONObject) obj;
 				JSONArray ja = (JSONArray) jo.get("detail");
-				if (ja == null)
-					return "{}";
+				if (ja == null) {
+					String s ="{\"status\":";
+					if (checkL == 1)
+						s += true;
+					else
+						s += false;
+					return s + "}";
+				}
 				for (Object o : ja) {
 					if (o instanceof JSONObject) {
 						if (formattedDate.equals(id) && checkL == 1)
