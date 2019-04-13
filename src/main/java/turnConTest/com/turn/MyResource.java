@@ -85,7 +85,7 @@ public class MyResource {
 						JSONObject jo = (JSONObject) obj;
 						JSONArray ja = (JSONArray) jo.get("detail");
 						if (ja == null) {
-							String s ="{\"status\":";
+							String s = "{\"status\":";
 							if (checkL == 1)
 								s += true;
 							else
@@ -142,7 +142,7 @@ public class MyResource {
 						JSONObject jo = (JSONObject) obj;
 						JSONArray ja = (JSONArray) jo.get("detail");
 						if (ja == null) {
-							String s ="{\"status\":";
+							String s = "{\"status\":";
 							if (checkL == 1)
 								s += true;
 							else
@@ -226,7 +226,7 @@ public class MyResource {
 								}
 							}
 						}
-						
+
 					}
 				} catch (URISyntaxException e) { // TODO Auto-generated catch block
 					e.printStackTrace();
@@ -489,7 +489,7 @@ public class MyResource {
 				JSONObject jo = (JSONObject) obj;
 				JSONArray ja = (JSONArray) jo.get("detail");
 				if (ja == null) {
-					String s ="{\"status\":";
+					String s = "{\"status\":";
 					if (checkL == 1)
 						s += true;
 					else
@@ -807,7 +807,10 @@ public class MyResource {
 				String formattedDate = dtfL.format(checkIn);
 				con = DBUtil.getConnection();
 				stmt = con.createStatement();
-				stmt.executeUpdate("update dataturn set vl = \'" + s + "\' where datet = \'" + formattedDate + "\'");
+				stmt.executeUpdate(
+						"INSERT INTO dataturn (datet, vl) VALUES('" + formattedDate + "','" +  s + "') ON CONFLICT (datet) DO UPDATE SET vl = '" + s + "'");
+				// stmt.executeUpdate("update dataturn set vl = \'" + s + "\' where datet = \'"
+				// + formattedDate + "\'");
 			} catch (URISyntaxException e) { // TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SQLException e) { // TODO Auto-generated catch
