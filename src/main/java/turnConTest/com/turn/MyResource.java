@@ -794,7 +794,7 @@ public class MyResource {
 					s += "\"name\" : \"" + work.getName() + "\",";
 					s += "\"free\" : \"" + ((work.isTurn()) ? "1" : "0") + "\",";
 					s += "\"money\" : \"" + work.getMoney() + "\",";
-					s += "\"workTime\" : \"" + work.getWorkTime()==null?"Unkown": work.getWorkTime() + "\"";
+					s += "\"workTime\" : \"" + (work.getWorkTime()==null?"Unkown": work.getWorkTime()) + "\"";
 					s += "}";
 				}
 				s += "]";
