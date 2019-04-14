@@ -5,20 +5,30 @@ public class WorkHis {
 	private double money;
 	private boolean turn;// 1 free 0 count
 	private String id;
+	private String workTime;
 
 	public String getName() {
 		return name;
 	}
 
+	public String getWorkTime() {
+		return workTime;
+	}
+
+	public void setWorkTime(String workTime) {
+		this.workTime = workTime;
+	}
+
 	public WorkHis() {
 		
 	}
-	public WorkHis(String name, double money, boolean turn, String id) {
+	public WorkHis(String name, double money, boolean turn, String id, String workTime) {
 		super();
 		this.name = name;
 		this.money = money;
 		this.turn = turn;
 		this.id = id;
+		this.workTime = workTime;
 	}
 
 	public void setName(String name) {

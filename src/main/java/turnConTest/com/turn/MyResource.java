@@ -299,6 +299,7 @@ public class MyResource {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public String addGroup(@Context HttpHeaders httpheaders, @PathParam("id") String id, @PathParam("name") String name,
 			@PathParam("money") double money, @PathParam("free") String free) {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
 		String token = httpheaders.getHeaderString("Authorization");
 		int checkL = checkLogin(token);
 		if (checkL == 2) {
@@ -317,7 +318,8 @@ public class MyResource {
 		}
 		index++;
 		employee1.getTurnListD()
-				.add(new WorkHis(name, money, "1".equals(free) ? true : false, Integer.toString(index)));
+				.add(new WorkHis(name, money, "1".equals(free) ? true : false, Integer.toString(index),
+						dtf.format(Instant.now().atZone(ZoneId.of("America/Chicago")).toLocalDateTime())));
 		if ("0".equals(free)) {
 			employee1.setTotalTurn(employee1.getTotalTurn() + money);
 		}
@@ -555,6 +557,8 @@ public class MyResource {
 					tn.setId(pair.getValue().toString());
 				} else if (pair.getKey().equals("free")) {
 					tn.setTurn("1".equals(pair.getValue().toString()) ? true : false);
+				} else if (pair.getKey().equals("workTime")) {
+					tn.setWorkTime(pair.getValue().toString());
 				}
 			}
 			lstWh.add(tn);
@@ -789,7 +793,8 @@ public class MyResource {
 					s += "\"id\" : \"" + work.getId() + "\",";
 					s += "\"name\" : \"" + work.getName() + "\",";
 					s += "\"free\" : \"" + ((work.isTurn()) ? "1" : "0") + "\",";
-					s += "\"money\" : \"" + work.getMoney() + "\"";
+					s += "\"money\" : \"" + work.getMoney() + "\",";
+					s += "\"workTime\" : \"" + work.getWorkTime()!=null?"": work.getWorkTime() + "\"";
 					s += "}";
 				}
 				s += "]";
@@ -807,8 +812,8 @@ public class MyResource {
 				String formattedDate = dtfL.format(checkIn);
 				con = DBUtil.getConnection();
 				stmt = con.createStatement();
-				stmt.executeUpdate(
-						"INSERT INTO dataturn (datet, vl) VALUES('" + formattedDate + "','" +  s + "') ON CONFLICT (datet) DO UPDATE SET vl = '" + s + "'");
+				stmt.executeUpdate("INSERT INTO dataturn (datet, vl) VALUES('" + formattedDate + "','" + s
+						+ "') ON CONFLICT (datet) DO UPDATE SET vl = '" + s + "'");
 				// stmt.executeUpdate("update dataturn set vl = \'" + s + "\' where datet = \'"
 				// + formattedDate + "\'");
 			} catch (URISyntaxException e) { // TODO Auto-generated catch block
