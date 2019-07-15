@@ -185,7 +185,7 @@ public class MyResource {
 		final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
 		final String username = tokenizer.nextToken();
 		final String password = tokenizer.nextToken();
-		if ("admin".equals(username) && "207".equals(password)) {
+		if ("admin".equals(username) && "2608".equals(password)) {
 			return 1;
 		} else if ("viewer".equals(username) && "123".equals(password)) {
 			return 2;
